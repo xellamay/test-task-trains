@@ -1,5 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Train } from "../types/train";
+import trains from "../components/trains/Trains";
 
 const REDUCER_PREFIX = 'trains';
 
@@ -16,19 +17,24 @@ export const fetchTrains = createAsyncThunk(
 )
 
 interface TrainsState {
-  entities: Train[];
-  loading: 'idle' | 'pending' | 'succeeded' | 'failed'
+  entities: Train[],
+  loading: 'idle' | 'pending' | 'succeeded' | 'failed',
+  selectedTrain: Train | null,
 }
 
 const initialState: TrainsState = {
   entities: [],
   loading: 'idle',
+  selectedTrain: null,
 }
 
 const trainsSlice = createSlice({
   name: 'trains',
   initialState,
   reducers: {
+    SELECT_TRAIN: (state, action: PayloadAction<Train>) => {
+      state.selectedTrain = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTrains.pending, (state) => {
@@ -46,5 +52,5 @@ const trainsSlice = createSlice({
   },
 })
 
-
+export const { SELECT_TRAIN } = trainsSlice.actions;
 export default trainsSlice.reducer;

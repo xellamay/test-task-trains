@@ -7,8 +7,15 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Box, Button, Container, Toolbar, Typography } from "@mui/material";
+import { useAppSelector } from "../../hooks/hooks";
 
 const Characteristics: React.FC = () => {
+  const selectedTrain = useAppSelector((state) => state.trains.selectedTrain)
+
+  if (!selectedTrain) {
+    return null;
+  }
+
   return (
     <Container>
       <TableContainer sx={{ maxWidth: 750, height: "fit-content" }} component={Paper}>
@@ -31,13 +38,13 @@ const Characteristics: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
+            {selectedTrain.characteristics.map((item) => (
               <TableRow>
-                <TableCell align="center" contentEditable="true">
-                  олорпавап
-                </TableCell>
-                <TableCell align="center" contentEditable="true">вмвамва</TableCell>
-                <TableCell align="center" contentEditable="true">вымвымва</TableCell>
+                <TableCell align="center" contentEditable="true">{item.engineAmperage}</TableCell>
+                <TableCell align="center" contentEditable="true">{item.force}</TableCell>
+                <TableCell align="center" contentEditable="true">{item.speed}</TableCell>
               </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
