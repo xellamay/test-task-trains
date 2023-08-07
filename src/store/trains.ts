@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Train } from "../types/train";
-import trains from "../components/trains/Trains";
+import { Train, TrainCharacteristics } from "../types/train";
 
-const REDUCER_PREFIX = 'trains';
+const REDUCER_PREFIX = 'TrainsTable';
 
 export const fetchTrains = createAsyncThunk(
   `${REDUCER_PREFIX}/fetchTrains`,
@@ -18,39 +17,53 @@ export const fetchTrains = createAsyncThunk(
 
 interface TrainsState {
   entities: Train[],
-  loading: 'idle' | 'pending' | 'succeeded' | 'failed',
+  loading: "idle" | "pending" | "succeeded" | "failed",
   selectedTrain: Train | null,
+  editCharacteristics: TrainCharacteristics[] | null,
 }
 
 const initialState: TrainsState = {
   entities: [],
-  loading: 'idle',
+  loading: "idle",
   selectedTrain: null,
+  editCharacteristics: null,
 }
 
 const trainsSlice = createSlice({
-  name: 'trains',
+  name: "trains",
   initialState,
   reducers: {
     SELECT_TRAIN: (state, action: PayloadAction<Train>) => {
       state.selectedTrain = action.payload;
+      state.editCharacteristics = action.payload.characteristics;
     },
+    CHANGE_CELL: (state, action: PayloadAction<{ cellName: keyof TrainCharacteristics, value: number; index: number}>) => {
+      if (state.editCharacteristics) {
+        const { index, cellName, value} = action.payload;
+        state.editCharacteristics[index][cellName] = value
+      }
+    },
+    SAVE_CHARACTERISTICS: (state) => {
+      if (state.editCharacteristics) {
+        console.log(state.editCharacteristics.sort((a, b) => a.speed - b.speed).map((item) => item.speed))
+      }
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTrains.pending, (state) => {
-      state.loading = 'pending';
+      state.loading = "pending";
       state.entities = initialState.entities;
     })
     builder.addCase(fetchTrains.fulfilled, (state, action) => {
-      state.loading = 'succeeded'
+      state.loading = "succeeded"
       state.entities = action.payload;
     })
     builder.addCase(fetchTrains.rejected, (state) => {
-      state.loading = 'failed';
+      state.loading = "failed";
       state.entities = initialState.entities;
     })
   },
 })
 
-export const { SELECT_TRAIN } = trainsSlice.actions;
+export const { SELECT_TRAIN, CHANGE_CELL, SAVE_CHARACTERISTICS } = trainsSlice.actions;
 export default trainsSlice.reducer;

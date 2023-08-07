@@ -7,11 +7,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Toolbar, Typography } from "@mui/material";
-import { fetchTrains, SELECT_TRAIN } from "../../store/trains";
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { Train } from "../../types/train";
+import { fetchTrains, SELECT_TRAIN } from "../store/trains";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
+import { Train } from "../types/train";
 
-const Trains: React.FC = () => {
+const TrainsTable: React.FC = () => {
   const { entities, loading } = useAppSelector(state => state.trains)
   const dispatch = useAppDispatch();
 
@@ -24,7 +24,7 @@ const Trains: React.FC = () => {
   }
 
   return (
-    <Paper sx={{ minWidth: 400, overflow: 'hidden' }}>
+    <Paper sx={{ minWidth: 400, overflow: "hidden" }}>
       <TableContainer sx={{ height: "100vh" }}>
         <Toolbar>
           <Typography variant="h6">
@@ -43,12 +43,12 @@ const Trains: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {loading === 'pending' && (
+            {loading === "pending" && (
               <TableRow>
                 <TableCell align="center">Загружаю...</TableCell>
               </TableRow>
             )}
-            {loading === 'succeeded' && (
+            {loading === "succeeded" && (
               <>
                 {entities.map((train) => (
                   <TableRow
@@ -67,7 +67,7 @@ const Trains: React.FC = () => {
                   ))}
               </>
             )}
-            {loading === 'failed' && (
+            {loading === "failed" && (
               <TableRow>
                 <TableCell align="center">Не удалось загрузить</TableCell>
               </TableRow>
@@ -79,4 +79,4 @@ const Trains: React.FC = () => {
   )
 }
 
-export default Trains;
+export default TrainsTable;
